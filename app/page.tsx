@@ -27,6 +27,7 @@ export default async function IndexPage({
       <Card className="mt-6">
         {/* @ts-expect-error Server Component */}
         <UsersTable users={users} />
+        {/* FIXME (RSC): no more ts-expect-error */}
       </Card>
     </main>
   );
