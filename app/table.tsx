@@ -11,30 +11,29 @@ import {
 interface User {
   id: number;
   name: string;
+  username: string;
   email: string;
-  created_at: string;
 }
 
-export default async function UsersTable({ users }: { users: User[] }) {
+export default function UsersTable({ users }: { users: User[] }) {
   return (
     <Table>
       <TableHead>
         <TableRow>
-          <TableHeaderCell>Name</TableHeaderCell>          
+          <TableHeaderCell>Name</TableHeaderCell>
+          <TableHeaderCell>Username</TableHeaderCell>
           <TableHeaderCell>Email</TableHeaderCell>
-          <TableHeaderCell>Joined</TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {users.map((user) => (
           <TableRow key={user.id}>
             <TableCell>{user.name}</TableCell>
-         
             <TableCell>
-              <Text>{user.email}</Text>
+              <Text>{user.username}</Text>
             </TableCell>
             <TableCell>
-              <Text>{user.created_at}</Text>
+              <Text>{user.email}</Text>
             </TableCell>
           </TableRow>
         ))}

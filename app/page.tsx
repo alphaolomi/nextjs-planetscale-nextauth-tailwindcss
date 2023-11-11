@@ -1,9 +1,14 @@
+import { sql } from '@vercel/postgres';
 import { Card, Title, Text } from '@tremor/react';
-import { queryBuilder } from '../lib/planetscale';
 import Search from './search';
 import UsersTable from './table';
 
-export const dynamic = 'force-dynamic';
+interface User {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+}
 
 export default async function IndexPage({
   searchParams
@@ -11,23 +16,20 @@ export default async function IndexPage({
   searchParams: { q: string };
 }) {
   const search = searchParams.q ?? '';
-  const users = await queryBuilder
-    .selectFrom('users')
-    .select(['id', 'name', 'email', 'created_at'])
-    .where('name', 'like', `%${search}%`)
-    .execute();
+  const result = await sql`
+    SELECT id, name, username, email 
+    FROM members 
+    WHERE name ILIKE ${'%' + search + '%'};
+  `;
+  const users = result.rows as User[];
 
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <Title>Users</Title>
-      <Text>
-        A list of users retrieved from a MySQL database (PlanetScale).
-      </Text>
+      <Text>A list of users retrieved from a Postgres database.</Text>
       <Search />
       <Card className="mt-6">
-        {/* @ts-expect-error Server Component */}
         <UsersTable users={users} />
-        {/* FIXME (RSC): no more ts-expect-error */}
       </Card>
     </main>
   );
